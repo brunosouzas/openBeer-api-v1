@@ -18,8 +18,9 @@ Access https://anypoint.mulesoft.com/exchange/portals/brunosouzas-co-0/ to show 
 document to help https://docs.mulesoft.com/exchange/to-request-access
 
 ## Usage
-1- get your credentials (Authorization)
-2- run curl -H "client_ID: SET_CLIENT_ID" -H "client_secret: SET_CLIENT_SECRET" "http://openbeer.us-e2.cloudhub.io/v1/beers"
+- get your credentials (Authorization)
+- run 
+> curl -H "client_ID: SET_CLIENT_ID" -H "client_secret: SET_CLIENT_SECRET" "http://openbeer.us-e2.cloudhub.io/v1/beers"
 
 ## Deployment
 
