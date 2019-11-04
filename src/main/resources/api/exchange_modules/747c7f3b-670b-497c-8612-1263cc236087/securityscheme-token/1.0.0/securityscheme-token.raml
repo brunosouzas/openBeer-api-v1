@@ -1,0 +1,20 @@
+#%RAML 1.0 SecurityScheme
+
+description: This API supports Basic Authentication.
+type: x-custom
+displayName: custom authentication
+describedBy:
+  headers:
+    client_id:
+      type: string
+    client_secret:
+      type: string
+  responses:
+    401:
+      description: Unauthorized, The client_id or client_secret are not valid or the client does not have access.
+    429:
+      description: The client used all of it's request quota for the current period.
+    500:
+      description: An error ocurred, see the specific message.
+    503:
+      description: Contracts Information Unreachable.

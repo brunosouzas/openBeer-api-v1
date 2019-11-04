@@ -1,0 +1,6 @@
+{
+	"error" : {
+		"type": "error.errorType.identifier",
+		"message": "error.description"
+	}
+}

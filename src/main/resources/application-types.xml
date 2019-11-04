@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="error" format="json">
+      <types:shape format="weave" example="metadata/error.json"><![CDATA[%dw 2.0
+
+type error = {|
+  error: {|
+    "type": String, 
+    message: String
+  |}
+|} {"example": "{\"error\":{\"type\":\"error.errorType.identifier\",\"message\":\"error.description\"}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="beers" format="json">
+      <types:shape format="weave" example="metadata/beers.json"><![CDATA[%dw 2.0
+
+type beers = Array<{|  name: String,   abv: Number {"typeId": "double"},   ibu: Number {"typeId": "int"},   description: String,   breweries: {|    name: String,     country: String,     city: String  |},   category: {| name: String |},   style: {| name: String |}|}> {"example": "[{\"name\":\"Hocus Pocus\",\"abv\":4.5,\"ibu\":0,\"description\":\"Our take on a classic summer ale. A toast to weeds, rays, and summer haze. A light, crisp ale for mowing lawns, hitting lazy fly balls, and communing with nature, Hocus Pocus is offered up as a summer sacrifice to clodless days. Its malty sweetness finishes tart and crisp and is best apprediated with a wedge of orange.\",\"breweries\":{\"name\":\"Magic Hat\",\"country\":\"United States\",\"city\":\"South Burlington\"},\"category\":{\"name\":\"Other Style\"},\"style\":{\"name\":\"Light American Wheat Ale or Lager\"}},{\"name\":\"Full Moon Winter Ale\",\"abv\":5.6,\"ibu\":0,\"description\":\"This full-bodied ale is brewed with roasted malts and a hint of Dark Belgian sugar for a perfectly balanced taste.\",\"breweries\":{\"name\":\"Molson Breweries of Canada\",\"country\":\"Canada\",\"city\":\"Toronto\"},\"category\":{\"name\":\"Belgian and French Ale\"},\"style\":{\"name\":\"Other Belgian-Style Ales\"}}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="dbBeers" format="json">
+      <types:shape format="weave" example="metadata/dbBeers.json"><![CDATA[%dw 2.0
+
+type dbBeers = Array<{|  beers_name: String,   beers_abv: Number {"typeId": "double"},   beers_ibu: Number {"typeId": "int"},   beers_descript: String,   breweries_name: String,   breweries_country: String,   breweries_city: String,   styles_style_name: String,   categories_cat_name: String|}> {"example": "[{\"beers_name\":\"Hocus Pocus\",\"beers_abv\":4.5,\"beers_ibu\":0,\"beers_descript\":\"Our take on a classic summer ale. A toast to weeds, rays, and summer haze. A light, crisp ale for mowing lawns, hitting lazy fly balls, and communing with nature, Hocus Pocus is offered up as a summer sacrifice to clodless days. Its malty sweetness finishes tart and crisp and is best apprediated with a wedge of orange.\",\"breweries_name\":\"Magic Hat\",\"breweries_country\":\"United States\",\"breweries_city\":\"South Burlington\",\"styles_style_name\":\"Light American Wheat Ale or Lager\",\"categories_cat_name\":\"Other Style\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#fd3d1fdc-613e-4656-bd9a-f5285df2525d">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="error"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#f471dd8e-eccd-4e99-a013-234ef185869e">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="error"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#bac9de87-fa32-406c-98aa-5748dbb90f67">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="error"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#47c5a605-abe8-4712-b55e-9dd33bf7cf50">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="dbBeers"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="beers"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

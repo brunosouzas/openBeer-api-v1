@@ -1,0 +1,36 @@
+[
+	{
+		"name": "Hocus Pocus",
+		"abv": 4.5,
+		"ibu": 0,
+		"description": "Our take on a classic summer ale. A toast to weeds, rays, and summer haze. A light, crisp ale for mowing lawns, hitting lazy fly balls, and communing with nature, Hocus Pocus is offered up as a summer sacrifice to clodless days. Its malty sweetness finishes tart and crisp and is best apprediated with a wedge of orange.",
+		"breweries": {
+			"name": "Magic Hat",
+			"country": "United States",
+			"city": "South Burlington"
+		},
+		"category": {
+			"name": "Other Style"
+		},
+		"style": {
+			"name": "Light American Wheat Ale or Lager"
+		}
+	},
+	{
+		"name": "Full Moon Winter Ale",
+		"abv": 5.6,
+		"ibu": 0,
+		"description": "This full-bodied ale is brewed with roasted malts and a hint of Dark Belgian sugar for a perfectly balanced taste.",
+		"breweries": {
+			"name": "Molson Breweries of Canada",
+			"country": "Canada",
+			"city": "Toronto"
+		},
+		"category": {
+			"name": "Belgian and French Ale"
+		},
+		"style": {
+			"name": "Other Belgian-Style Ales"
+		}
+	}
+]

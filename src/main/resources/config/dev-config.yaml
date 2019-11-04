@@ -1,0 +1,10 @@
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  
+dbBeer:
+  host: "db-brunosouzas.mysql.database.azure.com"
+  port: "3306"
+  username: "brunosouzas@db-brunosouzas"
+  password: "dbBeer2019"
+  database: "dbBeers"

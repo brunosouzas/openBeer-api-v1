@@ -1,0 +1,20 @@
+#%RAML 1.0 Library
+
+types:
+  errorType: !include exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/error-datatype/1.0.0/error-datatype.raml
+
+traits:
+  hasError400:
+    usage: Use this trait for resources that could respond with a error status
+    responses:
+      400:
+        body:
+          application/json:
+            type: errorType
+  hasError500:
+    usage: Use this trait for resources that could respond with a error status
+    responses:
+      500:
+        body:
+          application/json:
+            type: errorType

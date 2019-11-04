@@ -1,0 +1,38 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/2e715376-8d51-497b-99cd-cff42fc60bc9/ # 
+title: OpenBeer-api
+version: v1
+description: API about beer information
+
+securitySchemes:
+  token: !include exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/securityscheme-token/1.0.0/securityscheme-token.raml
+
+resourceTypes:
+  rst: !include exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/resourcetype-default/1.0.0/resourcetype-default.raml
+
+types:
+  beers: !include exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/beers-datatype/1.0.0/beers-datatype.raml
+
+/beers:
+  description: get beer information
+  securedBy: token
+  type:
+    rst:
+      getObject: beers
+  get:
+  /name:
+    description: get beer information by name
+    securedBy: token
+    type:
+      rst:
+        getObject: beers
+    get:
+  /country:
+    description: get beer information by country
+    securedBy: token
+    type:
+      rst:
+        getObject: beers
+    get:
+
+    

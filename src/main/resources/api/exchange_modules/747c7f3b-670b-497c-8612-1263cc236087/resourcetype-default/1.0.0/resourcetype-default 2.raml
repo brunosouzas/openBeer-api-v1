@@ -1,0 +1,32 @@
+#%RAML 1.0 ResourceType
+
+uses:
+  error: exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/errors-trait/1.0.0/errors-trait.raml
+
+get?:
+  is: [error.hasError400, error.hasError500]
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<getObject>>
+post?:
+  is: [error.hasError400, error.hasError500]
+  body:
+    application/json:
+      type: <<postBodyObject>>
+  responses:
+    201:
+      body:
+        application/json:
+          type: <<postResponseObject>>
+put?:
+  is: [error.hasError400, error.hasError500]
+  body:
+    application/json:
+      type: <<putBodyObject>>
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<putResponseObject>>

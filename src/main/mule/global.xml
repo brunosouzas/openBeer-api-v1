@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<configuration doc:name="Configuration" doc:id="9cc89cd1-f9f7-44e0-82b8-bad3be4c0c4a" defaultErrorHandler-ref="globalError_Handler" />
+	<global-property doc:name="Global Property" doc:id="de681282-071e-4cb2-b071-6fda4eccb5e6" name="env" value="dev" />
+	<configuration-properties doc:name="Configuration properties" doc:id="0b6ed401-868e-4490-8356-15be4c223ca5" file="config/${env}-config.yaml" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4dff3d72-1d65-4916-a999-810c311d2ec9" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="cff6db82-7143-4dbe-954c-7df1bff1b928" >
+		<db:my-sql-connection host="${dbBeer.host}" port="${dbBeer.port}" user="${dbBeer.username}" password="${dbBeer.password}" database="${dbBeer.database}" >
+			<db:connection-properties >
+				<db:connection-property key="useSSL" value="true" />
+			</db:connection-properties>
+		</db:my-sql-connection>
+	</db:config>
+	<api-gateway:autodiscovery apiId="15860669" doc:name="API Autodiscovery" doc:id="d97411a9-0e24-4a94-95f1-fd474b070d39" flowRef="openbeer-api-main" />
+	<error-handler name="globalError_Handler" doc:id="bac9de87-fa32-406c-98aa-5748dbb90f67" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7adfb8a4-71a6-41fe-ad8e-6d4622cebb2e" type="ANY">
+			<set-variable value="400" doc:name="httpStatus::400" doc:id="1449146c-50e6-4182-b4b9-96e7928f034e" variableName="httpStatus"/>
+			<ee:transform doc:name="error message" doc:id="f471dd8e-eccd-4e99-a013-234ef185869e" >
+				<ee:message >
+					<ee:set-payload resource="dwl/error.dwl" />
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>

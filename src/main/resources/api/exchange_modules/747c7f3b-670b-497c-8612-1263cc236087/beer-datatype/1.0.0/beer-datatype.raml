@@ -1,0 +1,36 @@
+#%RAML 1.0 DataType
+
+description: informations from beer
+type: object
+properties:
+  name?:
+    description: Beer name
+    type: string
+  abv?:
+    description: ALCOHOL BY VOLUME
+    type: number
+    format: float
+  ibu?:
+    description: INTERNATIONAL BITTErNERSS UNITS
+    type: number
+    format: float
+  description?:
+    description: Beer description
+    type: string
+  breweries?: !include exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/beerbreweries-datatype/1.0.1/beerbreweries-datatype.raml
+  category: !include exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/beercategory-datatype/1.0.1/beercategory-datatype.raml
+  style: !include exchange_modules/747c7f3b-670b-497c-8612-1263cc236087/beerstyle-datatype/1.0.1/beerstyle-datatype.raml
+
+example:
+  name: Hocus Pocus
+  abv: 4.5
+  ibu: 0
+  description: Our take on a classic summer ale. A toast to weeds, rays, and summer haze. A light, crisp ale for mowing lawns, hitting lazy fly balls, and communing with nature, Hocus Pocus is offered up as a summer sacrifice to clodless days. Its malty sweetness finishes tart and crisp and is best apprediated with a wedge of orange.
+  breweries:
+    name: Magic Hat
+    country: United States
+    city: South Burlington
+  category:
+    name: Other Style
+  style:
+    name: Light American Wheat Ale or Lager

@@ -1,0 +1,13 @@
+beers_name,beers_abv,beers_ibu,beers_descript,breweries_name,breweries_country,breweries_city,styles_style_name,categories_cat_name
+"Hocus Pocus",4.5,0,"Our take on a classic summer ale.  A toast to weeds, rays, and summer haze.  A light, crisp ale for mowing lawns, hitting lazy fly balls, and communing with nature, Hocus Pocus is offered up as a summer sacrifice to clodless days.
+
+Its malty sweetness finishes tart and crisp and is best apprediated with a wedge of orange.","Magic Hat","United States","South Burlington","Light American Wheat Ale or Lager","Other Style"
+"Winter Warmer",5.2,0,,"Youngs & Company Brewery",England,London,"Old Ale","British Ale"
+"Oatmeal Stout",5,0,,"Samuel Smith Old Brewery (Tadcaster)","United Kingdom",Tadcaster,"American-Style Stout","North American Ale"
+"Chocolate Stout",0,0,,"Fort Collins Brewery","United States","Fort Collins","American-Style Stout","North American Ale"
+"The Kidd Lager",0,0,,"Fort Collins Brewery","United States","Fort Collins","German-Style Schwarzbier","German Lager"
+"Imperial Stout",7,0,,"Samuel Smith Old Brewery (Tadcaster)","United Kingdom",Tadcaster,"American-Style Stout","North American Ale"
+"Wiesen Edel Weisse",6.2,0,,"Private Weissbierbrauerei G. Schneider & Sohn GmbH",Germany,Kelheim,"South German-Style Hefeweizen","German Ale"
+"Cow Palace Scotch Ale 1998",8.7,0,,"Egan Brewing","United States","De Pere","Scotch Ale","British Ale"
+"Winter Ale",5.9,0,,"Summit Brewing","United States","Saint Paul","Old Ale","British Ale"
+"Full Moon Winter Ale",5.6,0,"This full-bodied ale is brewed with roasted malts and a hint of Dark Belgian sugar for a perfectly balanced taste.","Molson Breweries of Canada",Canada,Toronto,"Other Belgian-Style Ales","Belgian and French Ale"

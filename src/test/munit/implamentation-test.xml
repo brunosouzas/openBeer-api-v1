@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<munit:config name="implamentation-test.xml" />
+	
+
+	<munit:test name="impl-getBeers::mock::success" doc:id="d7665d93-a0ac-428d-81e9-ca7d4b88c1e3" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="2e284ee7-940b-49ca-9c70-fb560bfd42e3" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="select beers" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock/beers.csv')]" mediaType="application/csv" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="51d842a6-10dc-4990-a363-98e28d12a708" name="get:\beers:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="ef462049-f3a0-4581-9d4c-d0d9edb05801" actual="#[payload[0].name]" expected='#["Hocus Pocus"]'/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="impl-getBeers::mock::Nosuccess" doc:id="4afa2153-14f5-4d89-bfbe-1e67f6bbe8b9" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="d3c4d463-577c-4de9-9b1a-58fe661fcc7d" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="select beers" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[payload]" mediaType="application/java" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="c9f98d30-0add-4805-91ff-3ff1a2bba1bb" name="get:\beers:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="payload|blank" doc:id="745a2f93-b057-4cb0-ae95-5f09509c6eeb" actual="#[payload]" expected="#[[]]"/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="impl-getBeers::mock::Error" doc:id="c445181c-40a7-432d-8093-3988338c5b26" description="Test" expectedErrorType="DB:BAD_SQL_SYNTAX">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="46dac728-3437-4863-9726-ee3899181f58" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="select beers" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:BAD_SQL_SYNTAX" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="78d6a187-b3a7-4164-9041-fae36619f9a6" name="get:\beers\name:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="httpStatus::400" doc:id="37603959-7120-482e-a3b2-abd5cd86d504" actual="#[vars.httpStatus]" expected='#[400]'/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="impl-getBeersByName::mock::success" doc:id="a5b14225-4a2d-4b5d-b658-430bb0a34d8b" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers\name:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="b89f4124-f5b0-4eaf-aa25-534c8d888365" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Select beers by name" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock/beers.csv')]" mediaType="application/csv" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="1991dc20-edac-451f-87aa-7fd84c1a4596" name="get:\beers\name:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="aba6cc1f-8c6a-4793-8c4b-be25c17480a4" actual="#[payload[0].name]" expected='#["Hocus Pocus"]'/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="impl-getBeersByName::mock::Error" doc:id="b57edd33-f64c-427f-b033-95caccd4ae7b" description="Test" expectedErrorType="HTTP:BAD_REQUEST">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers\name:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="012c58a0-97ed-4cd4-8142-748abdfed66c" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Select beers by name" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="1e4974bc-10cd-42d2-9f85-99227a557be9" name="get:\beers\name:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="httpStatus::400" doc:id="05c72c82-5fee-4c20-bda7-1038bcca32aa" actual="#[vars.httpStatus]" expected='#[400]'/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="impl-getBeersByName::mock::Nosuccess" doc:id="09b475e7-4afd-4254-a656-2b31cc83129f" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers\name:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="a9db0996-6447-4604-8a55-af4005b4b092" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Select beers by name" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[payload]" mediaType="application/java" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="0a23bb00-3ec6-45b4-b8c0-14017ff67c37" name="get:\beers\name:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="payload|blank" doc:id="3fca493b-bc6d-4d54-9740-09f06b621877" actual="#[payload]" expected="#[[]]"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="impl-getBeersByCountry::mock::success" doc:id="93b0931e-8ba4-45c0-89b8-eb0ec2e8569b" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers\country:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="dbc4da5e-cb8f-4c42-944c-59e1d60efdbd" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Select beers by country" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('mock/beers.csv')]" mediaType="application/csv" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="e875662c-987b-4c47-a263-32fb83e90fda" name="get:\beers\country:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="eacaa29c-47b6-468b-958c-72aaa3ed2af9" actual="#[payload[0].name]" expected='#["Hocus Pocus"]'/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="impl-getBeersByCountry::mock::Nosuccess" doc:id="480a46aa-1383-49e4-91b9-f6d7354dbe96" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers\country:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock beers table" doc:id="03b83fe3-a1d3-42be-960f-4dc0f27a3f53" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Select beers by country" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[payload]" mediaType="application/java" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="a0639341-56a8-483d-b24d-981160d64f7a" name="get:\beers\country:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="payload|blank" doc:id="54a889df-3491-41fc-a0cb-ddd373a02b72" actual="#[payload]" expected="#[[]]"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="impl-getBeersByCountry::mock::Error" doc:id="bef4a7e8-96fe-40ea-9556-139f8cfd965a" description="Test" expectedErrorType="HTTP:BAD_REQUEST">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+			<munit:enable-flow-source value="get:\beers\country:openbeer-api-config" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="f1463e1c-a0bb-40a7-becc-79b2dc1d91dc" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Select beers by country" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference" doc:id="5a658549-bde5-417b-8157-8928c8d6a6e8" name="get:\beers\country:openbeer-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="httpStatus::400" doc:id="fc729589-d9f5-40f1-945b-50e761d5c919" actual="#[vars.httpStatus]" expected='#[400]'/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

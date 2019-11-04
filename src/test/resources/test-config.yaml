@@ -1,0 +1,9 @@
+http:
+  port: "8081"
+  
+dbBeer:
+  host: "127.0.0.1"
+  port: "123"
+  username: "brunosouzas"
+  password: "2019"
+  database: "dbBeers"

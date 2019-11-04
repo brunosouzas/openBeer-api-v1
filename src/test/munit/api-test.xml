@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<munit:config name="api-test.xml" />
+	<http:request-config name="HTTP_Request_configuration_test_impl" doc:name="HTTP Request configuration" doc:id="a0310f7d-98f3-40fe-bc2c-1fba8f8d573c">
+		<http:request-connection host="${http.host}" port="${http.port}" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="b75f7142-5cee-4b99-9b90-02c4e46dfef2" file="test-config.yaml" />
+
+	<munit:test name="NOT_FOUND" description="MUnit Test" doc:id="9fde2eb4-a5de-4c31-b96c-be528f6e344d">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+		</munit:enable-flow-sources>
+		<munit:execution >
+			<http:request method="GET" doc:name="Request" doc:id="43ed72f9-857e-44bf-875c-8f8139b32268" path="/v1/beer/name?beerName=Pocus" config-ref="HTTP_Request_configuration_test_impl">
+				<http:response-validator >
+					<http:success-status-code-validator values="404" />
+				</http:response-validator>
+			</http:request>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that statusCode is 404" doc:id="223986f8-798e-40be-a816-7c668512f511" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(404)]" message="Status code is 404"/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="UNSUPPORTED_MEDIA_TYPE" description="MUnit Test" doc:id="bc433592-5a57-4580-a9f5-9802a417265b" ignore="true">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+		</munit:enable-flow-sources>
+		<munit:execution >
+			<http:request method="POST" doc:name="Request" doc:id="eea02b47-b402-4d81-a61b-ed94838386e3" path="/v1/beers/name?beerName=Pocus" config-ref="HTTP_Request_configuration_test_impl">
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"content-Type" : "application/xlsx"
+}]]]></http:headers>
+				<http:response-validator >
+					<http:success-status-code-validator values="415" />
+				</http:response-validator>
+			</http:request>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that statusCode is 415" doc:id="a06a7267-7ce3-484d-b8af-40c621d6c9e5" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(415)]" message="Status code is 404"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="NOT_IMPLEMENTED" description="MUnit Test" doc:id="81fdd3d0-3659-47ea-a32e-6ce705705e7d">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+		</munit:enable-flow-sources>
+		<munit:execution >
+			<http:request method="GET" doc:name="Request" doc:id="7568c804-a873-47f4-81f6-efaeb8392f16" path="/v1/beers/name?beerName=Pocus" config-ref="HTTP_Request_configuration_test_impl" outputMimeType="application/xml">
+				<http:response-validator >
+					<http:success-status-code-validator values="501" />
+				</http:response-validator>
+			</http:request>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that statusCode is 501" doc:id="335b1c4f-df24-4529-b1fa-1496a66c286b" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(501)]" message="Status code is 404"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="BAD_REQUEST" description="MUnit Test" doc:id="0a9617db-ae7b-4078-a4c2-3576c416188f">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+		</munit:enable-flow-sources>
+		<munit:execution >
+			<http:request method="GET" doc:name="Request" doc:id="3f2ee617-7a6f-41ba-b846-7baf08d29a51" path="/v1/beers/name?beerNome=Pocus" config-ref="HTTP_Request_configuration_test_impl">
+				<http:response-validator >
+					<http:success-status-code-validator values="400" />
+				</http:response-validator>
+			</http:request>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that statusCode is 400" doc:id="f5facaf7-0d84-4975-a0f0-1a0f713273b3" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(400)]" message="Status code is 404"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="METHOD_NOT_ALLOWED" description="MUnit Test" doc:id="892b913b-a5c4-4ca0-9dd3-325ec2cb27fa">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+		</munit:enable-flow-sources>
+		<munit:execution >
+			<http:request method="OPTIONS" doc:name="Request" doc:id="bb725039-1c92-4c24-ae9f-3c802805362a" path="/v1/beers/name?beerName=Pocus" config-ref="HTTP_Request_configuration_test_impl">
+				<http:response-validator >
+					<http:success-status-code-validator values="405" />
+				</http:response-validator>
+			</http:request>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that statusCode is 405" doc:id="193a55ed-73fc-410f-86ef-3a03b7c2b7f8" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(405)]" message="Status code is 404"/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="CONSOLE::NOT_FOUND" description="MUnit Test" doc:id="e3d64778-d63d-42d6-aa3b-28c66ce671d6">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="openbeer-api-main" />
+		</munit:enable-flow-sources>
+		<munit:execution >
+			<http:request method="GET" doc:name="Request" doc:id="4f3d9839-c475-4393-86d3-32f8b5a5b190" path="/console/error" config-ref="HTTP_Request_configuration_test_impl">
+				<http:response-validator >
+					<http:success-status-code-validator values="404" />
+				</http:response-validator>
+			</http:request>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that statusCode is 404" doc:id="95f1c37f-0600-45e0-82a1-359c509e3c40" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(404)]" message="Status code is 404"/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

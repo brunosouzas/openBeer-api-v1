@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+	<apikit:config name="openbeer-api-config" api="openbeer-api.raml"
+		outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<flow name="openbeer-api-main">
+		<http:listener path="/v1/*" config-ref="HTTP_Listener_config">
+			<http:response statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[output application/json
+---
+{
+	"error" : {
+		"type": vars.errorType,
+		"message": vars.errorDescription
+	}
+}]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:router config-ref="openbeer-api-config" />
+		<error-handler>
+			<on-error-propagate type="APIKIT:BAD_REQUEST">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="errorType"><![CDATA[%dw 2.0
+output application/java
+---
+"OpenBeer - Bad request"
+			]]></ee:set-variable>
+						<ee:set-variable variableName="errorDescription"><![CDATA[%dw 2.0
+output application/java
+---
+"we are having API problem, please try again later"]]></ee:set-variable>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+400]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_FOUND">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="errorType"><![CDATA[%dw 2.0
+output application/java
+---
+"OpenBeer - Resource not found"
+			]]></ee:set-variable>
+						<ee:set-variable variableName="errorDescription"><![CDATA[%dw 2.0
+output application/java
+---
+"we are having API problem, please try again later"]]></ee:set-variable>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="errorType"><![CDATA[%dw 2.0
+output application/java
+---
+"OpenBeer - Method not allowed"
+			]]></ee:set-variable>
+						<ee:set-variable variableName="errorDescription"><![CDATA[%dw 2.0
+output application/java
+---
+"we are having API problem, please try again later"]]></ee:set-variable>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+405]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="errorType"><![CDATA[%dw 2.0
+output application/java
+---
+"OpenBeer - Not acceptable"
+			]]></ee:set-variable>
+						<ee:set-variable variableName="errorDescription"><![CDATA[%dw 2.0
+output application/java
+---
+"we are having API problem, please try again later"]]></ee:set-variable>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+406]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="errorType"><![CDATA[%dw 2.0
+output application/java
+---
+"OpenBeer - Unsupported media type"
+			]]></ee:set-variable>
+						<ee:set-variable variableName="errorDescription"><![CDATA[%dw 2.0
+output application/java
+---
+"we are having API problem, please try again later"]]></ee:set-variable>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+415]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="errorType"><![CDATA[%dw 2.0
+output application/java
+---
+"OpenBeer - Not Implemented"
+			]]></ee:set-variable>
+						<ee:set-variable variableName="errorDescription"><![CDATA[%dw 2.0
+output application/java
+---
+"we are having API problem, please try again later"]]></ee:set-variable>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+501]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="openbeer-api-console">
+		<http:listener path="/console/*" config-ref="HTTP_Listener_config">
+			<http:response statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:console config-ref="openbeer-api-config" />
+		<error-handler>
+			<on-error-propagate type="APIKIT:NOT_FOUND">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="errorType"><![CDATA[%dw 2.0
+output application/java
+---
+"OpenBeer - Resource not found"
+			]]></ee:set-variable>
+						<ee:set-variable variableName="errorDescription"><![CDATA[%dw 2.0
+output application/java
+---
+"we are having API problem, please try again later"]]></ee:set-variable>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get:\beers:openbeer-api-config">
+		<flow-ref doc:name="impl-getBeers" doc:id="7fc6ef6f-8a75-4668-a533-bee6911cb9eb"
+			name="impl-getBeers" />
+	</flow>
+	<flow name="get:\beers\country:openbeer-api-config">
+		<flow-ref doc:name="impl-getBeersByCountry" doc:id="d3938431-446e-4615-aaf1-d13636a1c9dc"
+			name="impl-getBeersByCountry" />
+	</flow>
+	<flow name="get:\beers\name:openbeer-api-config">
+		<flow-ref doc:name="impl-getBeersByName" doc:id="f3e8750c-090e-4e0f-866d-e7870f41069f"
+			name="impl-getBeersByName" />
+	</flow>
+</mule>
