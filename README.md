@@ -9,7 +9,7 @@ Review one of the twenty thousand more beers in our database. Feel free to give 
 # Get Started
 
 ## API Documentation
-https://anypoint.mulesoft.com/exchange/portals/brunosouzas-co-0/747c7f3b-670b-497c-8612-1263cc236087/openbeer-api/
+https://anypoint.mulesoft.com/exchange/portals/brunosouzas-co-0/ and select OpenBeer
 
 ## Authorization
 Access https://anypoint.mulesoft.com/exchange/portals/brunosouzas-co-0/ to show all APIs and 'Request Access' inside API to get your credentials (client_ID and client_secret)
@@ -25,7 +25,7 @@ document to help https://docs.mulesoft.com/exchange/to-request-access
 
 Use cloudhub to deploy API
 - 0.1 vCore
-- cloudHub properties
+- cloudHub properties (fill properties)
   - env=prod
   - dbBeer.host=
   - dbBeer.port=
